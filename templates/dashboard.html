@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkWatch Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F4F1E6;
+            color: #4B4B4B;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #8B9A6C;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        .parks-table {
+            flex: 2;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .report-section {
+            flex: 1;
+            padding: 20px;
+            background: #E6D5B8;
+            border-radius: 8px;
+            margin-left: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #B6C197;
+        }
+        button {
+            background-color: #6B8E23;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>ParkWatch - Park Management Dashboard</header>
+    <div class="container">
+        <div class="parks-table">
+            <h2>Active Parks</h2>
+            <table>
+                <tr>
+                    <th>Park</th>
+                    <th>Upcoming Maintenance Tasks</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="park1.jpg" alt="Park 1" width="100"><br>
+                        Green Meadows Park
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Tree Trimming - March 10</li>
+                            <li>Lawn Mowing - March 12</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="park2.jpg" alt="Park 2" width="100"><br>
+                        Riverbend Park
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Watering Schedule - March 11</li>
+                            <li>Trail Cleanup - March 14</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="report-section">
+            <h2>Park Reports</h2>
+            <label for="park-select">Select Park:</label>
+            <select id="park-select" name="park-select">
+                <option value="green_meadows">Green Meadows Park</option>
+                <option value="riverbend">Riverbend Park</option>
+            </select>
+            <br><br>
+            <table>
+                <tr>
+                    <th>Report Type</th>
+                    <th>Details</th>
+                    <th>Date</th>
+                </tr>
+                <tr>
+                    <td>Vandalism</td>
+                    <td>Graffiti on playground</td>
+                    <td>March 5</td>
+                </tr>
+                <tr>
+                    <td>Broken Fixture</td>
+                    <td>Bench needs repair</td>
+                    <td>March 6</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
