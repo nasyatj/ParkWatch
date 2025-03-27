@@ -1,4 +1,5 @@
 import time
+from collections import Counter
 
 import requests
 import psycopg2
@@ -6,18 +7,21 @@ from datetime import datetime
 
 # OpenWeatherMap API Configuration
 API_KEY = "7ef4fb0d4778af5be6af867af0f0fcb7"
-CITY = "Toronto"
 URL = f"https://api.openweathermap.org/data/3.0/onecall?lat=43.7&lon=-79.42&exclude=hourly,daily&appid={API_KEY}&units=metric"
 
-# Database Configuration
+# Database configuration
 DB_CONFIG = {
-    "dbname": "weather_data",
-    "user": "postgres",  # Use 'postgres' unless you created another user
-    "password": "coe892",
-    "host": "34.130.225.57",
-    "port": "5432"
+    "dbname": "neondb",
+    "user": "neondb_owner",
+    "password": "npg_wcnb1VdW5ELa",
+    "host": "ep-square-band-a53at0wv-pooler.us-east-2.aws.neon.tech",
+    "port": "5432",
+    "sslmode": "require"
 }
 
+# Utility to get DB connection
+def get_db_connection():
+    return psycopg2.connect(**DB_CONFIG)
 
 # Function to fetch weather data
 def fetch_weather():
@@ -30,8 +34,8 @@ def fetch_weather():
         weather_info = {
             "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             "temperature": data['current']['temp'],  # Current temperature
-            "precipitation": data.get('minutely', [{}])[0].get('precipitation', 0)
-            # First available entry or 0 if missing
+            "precipitation": data.get('minutely', [{}])[0].get('precipitation', 0),
+            "wind speed": data['current']['wind_speed']
         }
 
         return weather_info
@@ -54,14 +58,15 @@ def store_weather_data():
         cur = conn.cursor()
 
         query = """
-        INSERT INTO weather_data (timestamp, temperature, precipitation)
-        VALUES (%s, %s, %s)
+        INSERT INTO weather_data (timestamp, temperature, precipitation, wind_speed)
+        VALUES (%s, %s, %s, %s)
         """
 
         cur.execute(query, (
             weather_data['timestamp'],
             weather_data['temperature'],
-            weather_data['precipitation']
+            weather_data['precipitation'],
+            weather_data['wind speed']
         ))
 
         conn.commit()
@@ -81,5 +86,4 @@ if __name__ == "__main__":
     # while True:
     #     store_weather_data()
     #     print(fetch_weather())
-    #     time.sleep(60 * 60) # Fetch data every hour
-
+    #     time.sleep(60 * 60 * 24) # Fetch data once per day
