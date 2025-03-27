@@ -82,8 +82,3 @@ def store_weather_data():
 if __name__ == "__main__":
     store_weather_data()
     print(fetch_weather())
-
-    # while True:
-    #     store_weather_data()
-    #     print(fetch_weather())
-    #     time.sleep(60 * 60 * 24) # Fetch data once per day

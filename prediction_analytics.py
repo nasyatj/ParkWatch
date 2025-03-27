@@ -47,7 +47,7 @@ def predict_plowing():
             if precip_data[temp_data.index(temperature)] > 20:
                 for park in parks:
                     park.plow_paths = True
-                    print(f"Snow plowing required for {park.name}")
+                    #print(f"Snow plowing required for {park.name}") #debugging
                 break
 
 def predict_watering():
@@ -63,7 +63,7 @@ def predict_watering():
         if precipitation < 0.25: #less than 25mm of rain
             for park in parks:
                 park.water_flowers = True
-                print(f"Watering required for {park.name}")
+                #print(f"Watering required for {park.name}") #debugging
             break
 
 def predict_grass_cutting():
@@ -75,7 +75,7 @@ def predict_grass_cutting():
                 if task[1] == "Lawn Mowing":
                     if (task[2] - datetime.now().date()).days < -7:
                         park.cut_grass = True
-                        print(f"Grass cutting required for {park.name}")
+                        #print(f"Grass cutting required for {park.name}") #debugging
 
 def predict_wind_damage():
     weather_data = weather_data_7days()
@@ -89,7 +89,7 @@ def predict_wind_damage():
         if wind > 50:
             for park in parks:
                 park.high_winds = True
-                print(f"High winds experienced at {park.name}")
+                #print(f"High winds experienced at {park.name}") #debugging
             break
 
 def predict_flooding():
@@ -104,7 +104,7 @@ def predict_flooding():
         if precipitation > 50:
             for park in parks:
                 park.heavy_rain = True
-                print(f"Possible flooding at {park.name}")
+                #print(f"Possible flooding at {park.name}") #debugging
             break
 
 def predict_heavy_snow():
@@ -122,7 +122,7 @@ def predict_heavy_snow():
             if precip_data[temp_data.index(temperature)] > 50:
                 for park in parks:
                     park.heavy_snow = True
-                    print(f"Heavy snowfall expected at {park.name}")
+                    #print(f"Heavy snowfall expected at {park.name}") #debugging
                 break
 
 
@@ -137,7 +137,7 @@ def update_parks():
             park.heavy_rain,
             park.heavy_snow
         )
-    print("Park data updated successfully.")
+    #print("Park data updated successfully.") #debugging
 
 
 if __name__ == "__main__":
