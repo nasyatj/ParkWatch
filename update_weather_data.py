@@ -1,9 +1,7 @@
-import time
-from collections import Counter
-
-import requests
-import psycopg2
 from datetime import datetime
+
+import psycopg2
+import requests
 
 # OpenWeatherMap API Configuration
 API_KEY = "7ef4fb0d4778af5be6af867af0f0fcb7"

@@ -53,7 +53,12 @@ def get_reports():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM park_reports ORDER BY date DESC")
+        cur.execute("""
+                    SELECT parks.park_name, park_reports.report_type, park_reports.details, park_reports.date, park_reports.status, park_reports.photo, park_reports.id
+                    FROM park_reports 
+                    JOIN parks ON park_reports.park = parks.id 
+                    ORDER BY park_reports.date DESC
+                """)
         rows = cur.fetchall()
         cur.close()
         conn.close()
@@ -71,6 +76,7 @@ def get_tasks():
         tasks = cur.fetchall()
         cur.close()
         conn.close()
+        print(tasks)
         return tasks
     except Exception as e:
         print("Error fetching tasks:", e)

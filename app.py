@@ -49,6 +49,7 @@ def home():
     weather = get_latest_weather()
     tasks = get_tasks()
     reports = get_reports()
+    parks = get_parks()
 
     # Apply filtering
     if search:
@@ -76,8 +77,8 @@ def home():
         status_counts=dict(status_counts),
         park_counts=dict(park_counts),
         task_counts=dict(task_counts),  
-        active_tab=active_tab
-
+        active_tab=active_tab,
+        parks = parks
     )
 
 

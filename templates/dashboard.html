@@ -150,9 +150,9 @@
         <th>Park</th>
         <th>Upcoming Maintenance Tasks</th>
       </tr>
-      {% for park in ['Green Meadows Park', 'Riverbend Park'] %}
+      {% for park in parks %}
       <tr>
-        <td>{{ park }}</td>
+        <td>{{ park[1] }}</td>
         <td>
           <ul>
             {% for task in tasks if task[0] == park %}
@@ -183,8 +183,9 @@
          <input type="hidden" name="active_tab" value="maintenance-tab">
       <label>Park:</label>
       <select name="park" required>
-        <option value="Green Meadows Park">Green Meadows Park</option>
-        <option value="Riverbend Park">Riverbend Park</option>
+        {% for park in parks %}
+        <option value="{{ park }}">{{ park[1] }}</option>
+        {% endfor %}
       </select>
       
       <label>Task:</label>
@@ -265,16 +266,17 @@
       </tr>
       {% for report in reports %}
       <tr>
+        <td>{{ report[0] }}</td>
         <td>{{ report[1] }}</td>
         <td>{{ report[2] }}</td>
         <td>{{ report[3] }}</td>
-        <td>{{ report[5] }}</td>
+        <td>{{ report[4] }}</td>
         <td>
-          {% if report[6] %}
+          {% if report[5] %}
           <div>
-            <img src="{{ url_for('static', filename='uploads/' ~ report[6]) }}" alt="Photo" width="80"><br>
+            <img src="{{ url_for('static', filename='uploads/' ~ report[5]) }}" alt="Photo" width="80"><br>
             {% if role == 'admin' %}
-            <a href="{{ url_for('download_photo', filename=report[6]) }}" class="resolve-btn" style="display:inline-block; margin-top: 5px;">
+            <a href="{{ url_for('download_photo', filename=report[5]) }}" class="resolve-btn" style="display:inline-block; margin-top: 5px;">
               <i class="fa-solid fa-download"></i> Download
             </a>
             {% endif %}
@@ -284,17 +286,17 @@
           {% endif %}
         </td>
         <td>
-          {% if report[5] != 'Resolved' and role == 'admin' %}
+          {% if report[4] != 'Resolved' and role == 'admin' %}
           <form method="POST" action="{{ url_for('resolve_report') }}" style="display:inline;">
-            <input type="hidden" name="report_id" value="{{ report[0] }}">
+            <input type="hidden" name="report_id" value="{{ report[6] }}">
             <button class="resolve-btn" type="submit"><i class="fa-solid fa-check"></i> Resolve</button>
           </form>
-          {% elif report[5] != 'Resolved' %}<em>Pending</em>
+          {% elif report[4] != 'Resolved' %}<em>Pending</em>
           {% else %}✅{% endif %}
 
           {% if role == 'admin' %}
           <form method="POST" action="{{ url_for('delete_report') }}" style="display:inline;">
-            <input type="hidden" name="report_id" value="{{ report[0] }}">
+            <input type="hidden" name="report_id" value="{{ report[6] }}">
             <input type="hidden" name="active_tab" value="reports-tab">
             <button class="delete-btn" type="submit"><i class="fa-solid fa-trash"></i> Delete</button>
           </form>
