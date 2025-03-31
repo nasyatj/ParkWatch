@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Flask
+instance/
+.env
+
+# macOS/Windows/Linux
+.DS_Store
+Thumbs.db
+
+# GCP Credentials (IMPORTANT)
+*.json
+
+# Virtual environments
+venv/
+
+# Logs
+*.log

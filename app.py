@@ -93,7 +93,7 @@ def submit_report():
     if photo_file and photo_file.filename != '':
         photo_filename = secure_filename(photo_file.filename)
 
-        #uplaod to gcs
+        #upload to gcs
         upload_to_gcs(photo_file, photo_filename)
 
     try:
