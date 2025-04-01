@@ -38,3 +38,4 @@ soupsieve==2.6
 typing_extensions==4.13.0
 urllib3==2.3.0
 Werkzeug==3.1.3
+pip freeze > requirements.txt

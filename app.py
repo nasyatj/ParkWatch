@@ -20,7 +20,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 load_dotenv()
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("coe892-project-parkwatch-d3595caedfd5.json")
 #path to google crednetials
 
 BUCKET_NAME = "reported_pictures"
@@ -54,17 +54,18 @@ def home():
     # Apply filtering
     if search:
         reports = [
-            report for report in reports
-            if search in report[1].lower()
-            or search in report[2].lower()
-            or search in report[5].lower()
-        ]
+        report for report in reports
+        if search in report[0].lower()
+        or search in report[1].lower()
+        or search in report[4].lower()
+    ]
+
 
     # Chart data prep
-    type_counts = Counter([report[2] for report in reports])
-    status_counts = Counter([report[5] for report in reports])
-    park_counts = Counter([report[1] for report in reports])
-    task_counts = get_task_summary(tasks)  # ← this was missing!
+    type_counts = Counter([report[1] for report in reports])    # Report Type
+    status_counts = Counter([report[4] for report in reports])  # Report Status
+    park_counts = Counter([report[0] for report in reports])    # Park Name
+    task_counts = get_task_summary(tasks, parks)                # Maintenance per Park (using park name)
 
     return render_template(
         'dashboard.html',
@@ -82,7 +83,6 @@ def home():
     )
 
 
-
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
     park = request.form.get('park')
@@ -93,9 +93,13 @@ def submit_report():
 
     if photo_file and photo_file.filename != '':
         photo_filename = secure_filename(photo_file.filename)
+        
+        # Save locally
+        local_path = os.path.join(app.config['UPLOAD_FOLDER'], photo_filename)
+        photo_file.save(local_path)
 
-        #upload to gcs
-        upload_to_gcs(photo_file, photo_filename)
+        # Upload to GCS
+        upload_to_gcs(open(local_path, 'rb'), photo_filename)
 
     try:
         conn = get_db_connection()
@@ -109,8 +113,10 @@ def submit_report():
         conn.close()
     except Exception as e:
         print("Error inserting report:", e)
+
     active_tab = request.form.get('active_tab', 'reports-tab')
     return redirect(url_for('home', tab=active_tab))
+
 
 
 
@@ -156,7 +162,6 @@ def delete_report():
 
     return redirect(url_for('home', tab=active_tab))
 
-
 @app.route('/add_task', methods=['POST'])
 def add_task():
     if session.get('role') != 'admin':
@@ -166,17 +171,26 @@ def add_task():
     task = request.form['task']
     date = request.form['date']
 
+    print("Inserting task →", park, task, date)  # debug
+
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO maintenance_tasks (park, task, date) VALUES (%s, %s, %s)", (park, task, date))
+        cur.execute(
+            "INSERT INTO maintenance_tasks (park, task, date) VALUES (%s, %s, %s)",
+            (int(park), task, date)
+        )
         conn.commit()
         cur.close()
         conn.close()
+        print("Task inserted!")
     except Exception as e:
         print("Error inserting task:", e)
+    
+    return redirect(url_for('home', tab='maintenance-tab', selected_park=park))
 
-    return redirect(url_for('home'))
+
+   
 
 @app.route('/delete_task', methods=['POST'])
 def delete_task():
@@ -197,6 +211,20 @@ def delete_task():
         print("Error deleting task:", e)
 
     return redirect(url_for('home', tab=active_tab))
+
+def get_task_summary(tasks, parks):
+    park_id_to_name = {park[0]: park[1] for park in parks}
+    task_counts = {}
+
+    for task in tasks:
+        park_id = task[3]
+        park_name = park_id_to_name.get(park_id, None)
+        if park_name:
+            task_counts[park_name] = task_counts.get(park_name, 0) + 1
+        # else skip unknown parks
+
+    return task_counts
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -260,6 +288,28 @@ def download_photo(filename):
         return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
     except Exception as e:
         return f"Error downloading file: {e}", 500
+    
+    
+@app.route('/add_park', methods=['POST'])
+def add_park():
+    if session.get('role') != 'admin':
+        return "Unauthorized", 403
+
+    park_name = request.form.get('park_name')
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO parks (park_name) VALUES (%s)", (park_name,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("New park added:", park_name)
+    except Exception as e:
+        print("Error adding park:", e)
+
+    return redirect(url_for('home', tab='maintenance-tab'))
+    
 
 
 # -------------------- Run App --------------------

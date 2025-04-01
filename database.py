@@ -1,5 +1,6 @@
 import time
 from collections import Counter
+from pytz import timezone
 
 import requests
 import psycopg2
@@ -37,16 +38,21 @@ def get_latest_weather():
             print("Weather API error:", data)
             return None
 
+        from pytz import timezone
+        toronto = timezone("America/Toronto")
+        timestamp = datetime.fromtimestamp(data["dt"], toronto).strftime("%Y-%m-%d %H:%M:%S")
+
         weather = {
             "city": data["name"],
             "temperature": data["main"]["temp"],
             "precipitation": data.get("rain", {}).get("1h", 0.0),
-            "timestamp": datetime.fromtimestamp(data["dt"]).strftime("%Y-%m-%d %H:%M:%S")
+            "timestamp": timestamp
         }
         return weather
     except Exception as e:
         print("Error fetching real-time weather:", e)
         return None
+
 
 # Get park reports
 def get_reports():
@@ -82,10 +88,20 @@ def get_tasks():
         print("Error fetching tasks:", e)
         return []
 
+def get_task_summary(tasks, parks):
+    park_id_to_name = {park[0]: park[1] for park in parks}
+    task_counts = {}
 
-def get_task_summary(tasks):
-    parks = [task[0] for task in tasks]
-    return Counter(parks)
+    for task in tasks:
+        park_id = task[3]
+        park_name = park_id_to_name.get(park_id, None)
+        if park_name:
+            task_counts[park_name] = task_counts.get(park_name, 0) + 1
+        # else skip unknown parks
+
+    return task_counts
+
+
 
 #get weather for last 7 days
 def weather_data_7days():
@@ -136,7 +152,7 @@ def weather_data_24hours():
         print(f"Error fetching weather data: {e}")
         return []
 
-
+    
 def get_parks():
     try:
         conn = get_db_connection()
@@ -149,6 +165,7 @@ def get_parks():
     except Exception as e:
         print("Error fetching parks:", e)
         return []
+    
 
 def update_park(id, plow_paths, water_flowers, cut_grass, high_winds, heavy_rain, heavy_snow):
     try:
