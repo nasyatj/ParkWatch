@@ -6,6 +6,7 @@ Steps to run park watch:
 2. Login using provided credentials:
 
 User: 
+
 For users, make sure to click on the 'Reports' Button in the middle of the screen in order to
 
 View Report: upload Report (Make sure to enter Park name, Report Type, Details, and Picture)
