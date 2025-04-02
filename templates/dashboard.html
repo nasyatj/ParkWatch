@@ -188,7 +188,7 @@
 
       {% if role == 'admin' %}
       <h3>Add Maintenance Task</h3>
-      <form method="POST" action="{{ url_for('add_task') }}" onclick="alert('Task Submitted!')" >
+      <form method="POST" action="{{ url_for('add_task') }}" enctype = "multipart/form-data" onsubmit="alert('Task Submitted!')">
         <input type="hidden" name="active_tab" value="maintenance-tab">
 
         <label>Park:</label>
