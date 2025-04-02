@@ -2,8 +2,9 @@
 
 Steps to run park watch:
 
-1. Goto the following URL: https://parkwatch-app-642411019137.us-central1.run.app
-2. Login using provided credentials:
+1. Goto the following URL: https://parkwatch.onrender.com
+2. Create an account using the "Register Here" Option
+3. Login with new account credentials
 
 User: 
 
