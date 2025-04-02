@@ -38,7 +38,6 @@ def get_latest_weather():
             print("Weather API error:", data)
             return None
 
-        from pytz import timezone
         toronto = timezone("America/Toronto")
         timestamp = datetime.fromtimestamp(data["dt"], toronto).strftime("%Y-%m-%d %H:%M:%S")
 

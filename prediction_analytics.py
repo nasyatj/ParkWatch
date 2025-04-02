@@ -33,7 +33,7 @@ parks = [Park(**park) for park in parks_dict]
 
 # Snow plows prediction
 def predict_plowing():
-    weather_data = weather_data_7days()
+    weather_data = weather_data_24hours()
 
     if not weather_data:
         return "No weather data available."
@@ -78,7 +78,7 @@ def predict_grass_cutting():
                         #print(f"Grass cutting required for {park.name}") #debugging
 
 def predict_wind_damage():
-    weather_data = weather_data_7days()
+    weather_data = weather_data_24hours()
 
     if not weather_data:
         return "No weather data available."
@@ -86,7 +86,7 @@ def predict_wind_damage():
     # Extract wind speed data
     wind_speed = [data[4] for data in weather_data]
     for wind in wind_speed:
-        if wind > 50:
+        if wind > 19: #19m/s is considered high winds (70km/h)
             for park in parks:
                 park.high_winds = True
                 #print(f"High winds experienced at {park.name}") #debugging
