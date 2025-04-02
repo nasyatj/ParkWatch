@@ -7,9 +7,9 @@ Steps to run park watch:
 
 User: 
 
-For users, make sure to click on the 'Reports' Button in the middle of the screen in order to
+Click on the 'Reports' Button in the middle of the screen in order to upload Report (Make sure to enter Park name, Report Type, Details, and Picture)
 
-View Report: upload Report (Make sure to enter Park name, Report Type, Details, and Picture)
+Scroll down to view all reports
 
 Admin:
 
