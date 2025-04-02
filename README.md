@@ -1,6 +1,18 @@
 # ParkWatch
 
-Steps to run parkwatch:
+Steps to run park watch:
 
-1. Goto the following url: https://parkwatch-app-642411019137.us-central1.run.app
-2. Login using provided credentials
+1. Goto the following URL: https://parkwatch-app-642411019137.us-central1.run.app
+2. Login using provided credentials:
+
+User: 
+For users, make sure to click on the 'Reports' Button in the middle of the screen in order to:
+-View Report
+-Upload Report (Make sure to enter Park name, Report Type, Details, and Picture)
+
+Admin:
+-Goto main page, to add a maintenance task
+-Goto reports, to resolve, delete, and download photos of reports.
+
+
+Tip: For faster image loading, make sure to use: https://park-watch.salmanhashimto.workers.dev/uploads/[Picturename].[Extension] , enter the respective name of the picture followed by the extension type (png, jpeg, jpg).
