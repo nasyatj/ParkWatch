@@ -53,7 +53,6 @@ def get_latest_weather():
         print("Error fetching real-time weather:", e)
         return None
 
-
 # Get park reports
 def get_reports():
     try:
@@ -82,7 +81,6 @@ def get_tasks():
         tasks = cur.fetchall()
         cur.close()
         conn.close()
-        print(tasks)
         return tasks
     except Exception as e:
         print("Error fetching tasks:", e)
@@ -152,7 +150,7 @@ def weather_data_24hours():
         print(f"Error fetching weather data: {e}")
         return []
 
-    
+
 def get_parks():
     try:
         conn = get_db_connection()
@@ -165,7 +163,6 @@ def get_parks():
     except Exception as e:
         print("Error fetching parks:", e)
         return []
-    
 
 def update_park(id, plow_paths, water_flowers, cut_grass, high_winds, heavy_rain, heavy_snow):
     try:

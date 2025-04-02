@@ -20,7 +20,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 load_dotenv()
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("coe892-project-parkwatch-d3595caedfd5.json")
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 #path to google crednetials
 
 BUCKET_NAME = "reported_pictures"
@@ -93,7 +93,7 @@ def submit_report():
 
     if photo_file and photo_file.filename != '':
         photo_filename = secure_filename(photo_file.filename)
-        
+
         # Save locally
         local_path = os.path.join(app.config['UPLOAD_FOLDER'], photo_filename)
         photo_file.save(local_path)
@@ -116,7 +116,6 @@ def submit_report():
 
     active_tab = request.form.get('active_tab', 'reports-tab')
     return redirect(url_for('home', tab=active_tab))
-
 
 
 
@@ -171,8 +170,6 @@ def add_task():
     task = request.form['task']
     date = request.form['date']
 
-    print("Inserting task →", park, task, date)  # debug
-
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -183,14 +180,11 @@ def add_task():
         conn.commit()
         cur.close()
         conn.close()
-        print("Task inserted!")
     except Exception as e:
         print("Error inserting task:", e)
-    
+
     return redirect(url_for('home', tab='maintenance-tab', selected_park=park))
 
-
-   
 
 @app.route('/delete_task', methods=['POST'])
 def delete_task():
@@ -288,8 +282,8 @@ def download_photo(filename):
         return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
     except Exception as e:
         return f"Error downloading file: {e}", 500
-    
-    
+
+
 @app.route('/add_park', methods=['POST'])
 def add_park():
     if session.get('role') != 'admin':
@@ -309,7 +303,7 @@ def add_park():
         print("Error adding park:", e)
 
     return redirect(url_for('home', tab='maintenance-tab'))
-    
+
 
 
 # -------------------- Run App --------------------

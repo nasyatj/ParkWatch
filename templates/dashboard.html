@@ -144,14 +144,15 @@
 
   <!-- Maintenance Tab -->
   <div id="maintenance-tab" class="tab-section active card">
-    <h2><i class="fa-solid fa-tree"></i> Maintenance for 
+    <h2><i class="fa-solid fa-tree"></i> Maintenance for
         <select id="parkSelector" onchange="filterByPark()" style="padding: 5px; border-radius: 5px;">
+          <option value="" selected disabled>Select a park</option>
           {% for park in parks %}
             <option value="{{ park[0] }}">{{ park[1] }}</option>
           {% endfor %}
         </select>
       </h2>
-      
+
       <div id="maintenanceParkList">
         {% for park in parks %}
         <div class="park-section" data-park="{{ park[0] }}">
@@ -183,39 +184,47 @@
         </div>
         {% endfor %}
       </div>
-      
+
 
       {% if role == 'admin' %}
       <h3>Add Maintenance Task</h3>
-      <form method="POST" action="{{ url_for('add_task') }}">
+      <form method="POST" action="{{ url_for('add_task') }}" onclick="alert('Task Submitted!')" >
         <input type="hidden" name="active_tab" value="maintenance-tab">
-    
+
         <label>Park:</label>
         <select name="park" id="addTaskParkDropdown" required>
+          <option value="" selected disabled>Select a park</option>
           {% for park in parks %}
           <option value="{{ park[0] }}">{{ park[1] }}</option>
           {% endfor %}
         </select>
-    
-        <label>Task:</label>
-        <input type="text" name="task" required>
-    
+
+       <label>Task:</label>
+          <select name="task" required>
+            <option value="" selected disabled>Select a task</option>
+            <option value="Plow Paths">Plow Paths</option>
+            <option value="Watering">Watering</option>
+            <option value="Lawn Mowing">Lawn Mowing</option>
+            <option value="Trail Cleanup">Trail Cleanup</option>
+            <option value="Flood Inspection">Flood Inspection</option>
+            <option value="Snow Inspection">Snow Inspection</option>
+          </select>
+
         <label>Date:</label>
         <input type="date" name="date" required>
-    
+
         <button class="submit-btn" type="submit">Add Task</button>
       </form>
-    
+
       <h3>Add New Park</h3>
       <form method="POST" action="{{ url_for('add_park') }}">
         <label>Park Name:</label>
         <input type="text" name="park_name" required>
         <button class="submit-btn" type="submit">Add Park</button>
       </form>
-    
+
       <hr style="margin-top: 30px;">
     {% endif %}
-    
     
     <!-- Task Chart -->
     <div style="text-align: center; margin-top: 40px;">
@@ -230,18 +239,26 @@
   <div id="reports-tab" class="tab-section card">
     {% if role == 'user' or role == 'admin' %}
     <h2><i class="fa-solid fa-file-circle-plus"></i> Submit a Park Report</h2>
-    <form method="POST" action="{{ url_for('submit_report') }}" enctype="multipart/form-data">
-        <input type="hidden" name="active_tab" value="reports-tab">
-        <label>Park:</label>
-        <select name="park" required>
-            {% for park in parks %}
-            <option value="{{ park[0] }}">{{ park[1] }}</option>
-            {% endfor %}
-          </select>
-          
-    
+    <form method="POST" action="{{ url_for('submit_report') }}" enctype="multipart/form-data" onsubmit="alert('Thank you for your submission!');">
+      <input type="hidden" name="active_tab" value="reports-tab">
+      <label>Park:</label>
+      <select name="park" required>
+        <option value="" selected disabled>Select a park</option>
+        {% for park in parks %}
+        <option value="{{ park[0] }}">{{ park[1] }}</option>
+        {% endfor %}
+      </select>
+
+
       <label>Report Type:</label>
-      <input type="text" name="report_type" required>
+      <select name="report_type" required>
+        <option value="" selected disabled>Select report type</option>
+        <option value="Maintenance">Maintenance</option>
+        <option value="Safety">Public Safety</option>
+        <option value="Environmental">Environment</option>
+        <option value="Facilities">Facilities</option>
+        <option value="Accessibility">Accessibility</option>
+      </select>
     
       <label>Details:</label>
       <textarea name="details" rows="4" required></textarea>
@@ -429,22 +446,22 @@
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
-  
+
     function showTab(id) {
       document.getElementById('maintenance-tab').classList.remove('active');
       document.getElementById('reports-tab').classList.remove('active');
       document.getElementById(id).classList.add('active');
     }
-  
+
     function filterByPark() {
       const selectedParkId = document.getElementById('parkSelector').value;
       const sections = document.querySelectorAll('.park-section');
-  
+
       sections.forEach(section => {
         const parkId = section.getAttribute('data-park');
         section.style.display = parkId === selectedParkId ? 'block' : 'none';
       });
-  
+
       const dropdown = document.getElementById('addTaskParkDropdown');
       if (dropdown) {
         for (let i = 0; i < dropdown.options.length; i++) {
@@ -452,21 +469,21 @@
         }
       }
     }
-  
+
     document.addEventListener("DOMContentLoaded", () => {
       showTab("{{ active_tab }}");
-  
+
       const selectedPark = getQueryParam("selected_park");
       if (selectedPark) {
         document.getElementById("parkSelector").value = selectedPark;
       }
-  
-      filterByPark();  
+
+      filterByPark();
     });
   </script>
-  
-  
-   
+
+
+
 
 </body>
 </html>
